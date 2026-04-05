@@ -1,5 +1,4 @@
 [phases.setup]
-# Menginstruksikan Nixpacks untuk menyiapkan lingkungan PHP 8.2 dan Node.js
 nixPkgs = [
     "php82", 
     "php82Extensions.gd", 
@@ -13,26 +12,14 @@ nixPkgs = [
 ]
 
 [phases.install]
-# Instalasi dependensi backend (Composer) dan frontend (NPM)
-cmds = [
-    "composer install --ignore-platform-reqs --no-interaction", 
-    "npm install"
-]
+cmds = ["composer install --ignore-platform-reqs --no-interaction", "npm install"]
 
 [phases.build]
-# Membangun aset Vite/Tailwind dan membuat symbolic link untuk storage
-cmds = [
-    "npm run build", 
-    "php artisan storage:link"
-]
+cmds = ["npm run build", "php artisan storage:link"]
 
 [phases.start]
-# Urutan eksekusi: 
-# 1. Jalankan migrasi tabel (migrate)
-# 2. Isi data awal/admin (seed)
-# 3. Jalankan server Laravel di port yang disediakan Railway
+# Baris di bawah ini akan memaksa database diisi ulang setiap kali aplikasi menyala
 cmds = [
-    "php artisan migrate --force", 
-    "php artisan db:seed --force", 
+    "php artisan migrate:fresh --seed --force", 
     "php artisan serve --host=0.0.0.0 --port=$PORT"
 ]
