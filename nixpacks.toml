@@ -18,8 +18,8 @@ cmds = ["composer install --ignore-platform-reqs --no-interaction", "npm install
 cmds = ["npm run build", "php artisan storage:link"]
 
 [phases.start]
-# Baris di bawah ini akan memaksa database diisi ulang setiap kali aplikasi menyala
+# Jalankan migrasi saja, seeding kita lakukan lewat browser nanti
 cmds = [
-    "php artisan migrate:fresh --seed --force", 
+    "php artisan migrate --force", 
     "php artisan serve --host=0.0.0.0 --port=$PORT"
 ]
