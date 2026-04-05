@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["php82", "php82Extensions.gd", "php82Extensions.pcntl", "php82Extensions.curl", "nodejs"]
+nixPkgs = ["php82", "php82Extensions.gd", "php82Extensions.pcntl", "php82Extensions.curl", "php82Extensions.zip", "nodejs"]
 
 [phases.install]
 cmds = ["composer install --ignore-platform-reqs --no-interaction", "npm install"]
