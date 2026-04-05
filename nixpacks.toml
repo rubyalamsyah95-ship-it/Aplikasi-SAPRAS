@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["...", "php82Extensions.gd", "php82Extensions.pcntl", "php82Extensions.curl"]
+
+[phases.build]
+cmds = ["...", "npm run build"]
