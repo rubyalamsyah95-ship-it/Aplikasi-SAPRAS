@@ -5,7 +5,4 @@ nixPkgs = ["php82", "php82Extensions.gd", "php82Extensions.pcntl", "php82Extensi
 cmds = ["composer install --ignore-platform-reqs --no-interaction", "npm install"]
 
 [phases.build]
-cmds = ["npm run build", "php artisan migrate --force"]
-
-[start]
-cmd = "php -S 0.0.0.0:80 -t public"
+cmds = ["npm run build", "php artisan migrate --force", "php artisan storage:link"]
