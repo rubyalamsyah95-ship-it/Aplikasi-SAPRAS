@@ -8,20 +8,22 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
+    /**
+     * Jalankan database seeds.
+     */
     public function run(): void
     {
-        // 1. HANYA DATA ADMIN
+        // 1. BUAT ATAU UPDATE DATA ADMIN
         User::updateOrCreate(
-            ['username' => 'admin'], 
+            ['username' => 'admin'], // Cari berdasarkan username
             [
                 'name' => 'Administrator',
                 'email' => 'admin@mail.com',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('123'), // Password kamu adalah 123
                 'role' => 'admin',
             ]
         );
         
-        // Data siswa dihapus dari sini agar database bersih 
-        // dan siap diisi melalui fitur Import Excel oleh Admin.
+        // Catatan: Data siswa akan diisi melalui fitur Import Excel di aplikasi.
     }
 }

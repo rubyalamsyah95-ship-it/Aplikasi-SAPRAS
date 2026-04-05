@@ -9,20 +9,23 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Seed the aplikasi's database.
+     */
     public function run(): void
     {
-        // Bersihkan data lama agar fresh
+        // 1. Bersihkan data lama agar fresh (menghindari error duplikat)
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         User::truncate();
         Kategori::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        // Panggil UserSeeder untuk membuat akun
+        // 2. Panggil UserSeeder untuk membuat akun admin
         $this->call([
             UserSeeder::class,
         ]);
 
-        // Buat Kategori langsung di sini (karena datanya sedikit)
+        // 3. Buat Kategori Fasilitas (Data master aplikasi)
         Kategori::create(['nama_kategori' => 'Fasilitas']);
         Kategori::create(['nama_kategori' => 'Kebersihan']);
         Kategori::create(['nama_kategori' => 'Keamanan']);

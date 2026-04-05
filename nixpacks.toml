@@ -1,5 +1,5 @@
 [phases.setup]
-# Tambahkan ekstensi yang sering dibutuhkan Laravel
+# Menginstruksikan Nixpacks untuk menyiapkan lingkungan PHP 8.2 dan Node.js
 nixPkgs = [
     "php82", 
     "php82Extensions.gd", 
@@ -8,18 +8,31 @@ nixPkgs = [
     "php82Extensions.zip", 
     "php82Extensions.bcmath",
     "php82Extensions.mbstring",
-    "php82Extensions.pdo_mysql", # Sangat penting jika pakai MySQL
+    "php82Extensions.pdo_mysql",
     "nodejs"
 ]
 
 [phases.install]
-cmds = ["composer install --ignore-platform-reqs --no-interaction", "npm install"]
+# Instalasi dependensi backend (Composer) dan frontend (NPM)
+cmds = [
+    "composer install --ignore-platform-reqs --no-interaction", 
+    "npm install"
+]
 
 [phases.build]
-# Hapus migrate dari sini, pindahkan ke release/start
-cmds = ["npm run build", "php artisan storage:link"]
+# Membangun aset Vite/Tailwind dan membuat symbolic link untuk storage
+cmds = [
+    "npm run build", 
+    "php artisan storage:link"
+]
 
 [phases.start]
-# Jalankan migrasi tepat sebelum server start, lalu jalankan server
-# Menggunakan port dari variabel $PORT yang diberikan Railway
-cmds = ["php artisan migrate --force", "php artisan serve --host=0.0.0.0 --port=$PORT"]
+# Urutan eksekusi: 
+# 1. Jalankan migrasi tabel (migrate)
+# 2. Isi data awal/admin (seed)
+# 3. Jalankan server Laravel di port yang disediakan Railway
+cmds = [
+    "php artisan migrate --force", 
+    "php artisan db:seed --force", 
+    "php artisan serve --host=0.0.0.0 --port=$PORT"
+]
