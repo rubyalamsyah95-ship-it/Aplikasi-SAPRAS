@@ -1,8 +1,25 @@
 [phases.setup]
-nixPkgs = ["php82", "php82Extensions.gd", "php82Extensions.pcntl", "php82Extensions.curl", "php82Extensions.zip", "nodejs"]
+# Tambahkan ekstensi yang sering dibutuhkan Laravel
+nixPkgs = [
+    "php82", 
+    "php82Extensions.gd", 
+    "php82Extensions.pcntl", 
+    "php82Extensions.curl", 
+    "php82Extensions.zip", 
+    "php82Extensions.bcmath",
+    "php82Extensions.mbstring",
+    "php82Extensions.pdo_mysql", # Sangat penting jika pakai MySQL
+    "nodejs"
+]
 
 [phases.install]
 cmds = ["composer install --ignore-platform-reqs --no-interaction", "npm install"]
 
 [phases.build]
-cmds = ["npm run build", "php artisan migrate --force", "php artisan storage:link"]
+# Hapus migrate dari sini, pindahkan ke release/start
+cmds = ["npm run build", "php artisan storage:link"]
+
+[phases.start]
+# Jalankan migrasi tepat sebelum server start, lalu jalankan server
+# Menggunakan port dari variabel $PORT yang diberikan Railway
+cmds = ["php artisan migrate --force", "php artisan serve --host=0.0.0.0 --port=$PORT"]
