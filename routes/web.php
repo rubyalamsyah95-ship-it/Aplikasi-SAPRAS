@@ -38,7 +38,7 @@ Route::get('/debug-kategori', function () {
     
     foreach ($listKategori as $nama) {
         // Menggunakan updateOrCreate agar tidak duplikat jika diakses berkali-kali
-        \App\Models\Category::updateOrCreate(
+        \App\Models\Kategori::updateOrCreate(
             ['nama_kategori' => $nama],
             ['nama_kategori' => $nama]
         );
