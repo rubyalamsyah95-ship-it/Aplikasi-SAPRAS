@@ -46,12 +46,13 @@ class AspirasiController extends Controller
         }
 
         InputAspirasi::create([
-            'id_user'     => Auth::id(),
-            'id_kategori' => $request->id_kategori,
-            'lokasi'      => $request->lokasi,
-            'keterangan'  => $request->keterangan,
-            'status'      => 'Pending',
-            'foto'        => $namaFoto,
+            'id_user'       => Auth::id(),
+            'id_kategori'   => $request->id_kategori,
+            'lokasi'        => $request->lokasi,
+            'keterangan'    => $request->keterangan,
+            'status'        => 'Pending',
+            'foto'          => $namaFoto,
+            'tgl_pelaporan' => now(), // Tambahkan baris ini untuk mengisi tanggal otomatis
         ]);
 
         return redirect()->route('aspirasi.index')->with('success', 'Aspirasi berhasil dikirim!');
