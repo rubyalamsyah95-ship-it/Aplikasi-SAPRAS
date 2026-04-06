@@ -31,7 +31,9 @@
         .nav-item.active { background-color: #ffffff; color: #2563eb; font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
     </style>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="antialiased {{ request()->routeIs('welcome') ? '' : 'bg-slate-50' }}" x-data="{ sidebarOpen: true }">
 
