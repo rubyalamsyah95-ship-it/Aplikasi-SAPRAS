@@ -1,7 +1,7 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.a",
+    "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
@@ -68,7 +68,7 @@
             "php-http/discovery": true
         },
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.0"
         }
     },
     "minimum-stability": "stable",
