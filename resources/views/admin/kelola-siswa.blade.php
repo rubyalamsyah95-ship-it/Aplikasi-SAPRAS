@@ -24,8 +24,13 @@
                 </form>
             </div>
 
-            <!-- Tombol Tambah & Import -->
+            <!-- Tombol Tambah, Import & Hapus Massal -->
             <div class="lg:col-span-2 flex flex-wrap gap-2 justify-end">
+                <!-- Fitur Baru: Hapus Per Angkatan -->
+                <button onclick="openModal('modalHapusAngkatan')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-rose-200">
+                    <i class="bi bi-trash-fill"></i> HAPUS PER ANGKATAN
+                </button>
+
                 <button onclick="openModal('modalTambah')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-lg shadow-emerald-100">
                     <i class="bi bi-person-plus-fill"></i> TAMBAH MURID
                 </button>
@@ -44,6 +49,13 @@
             <div class="mb-4 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl flex items-center gap-3">
                 <i class="bi bi-check-circle-fill"></i>
                 <span class="font-bold text-sm">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-4 p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl flex items-center gap-3">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span class="font-bold text-sm">{{ session('error') }}</span>
             </div>
         @endif
 
@@ -76,12 +88,10 @@
                                 <div class="text-[10px] text-slate-400 font-bold uppercase">{{ $siswa->angkatan }}</div>
                             </td>
                             <td class="px-6 py-4 flex justify-center gap-2">
-                                <!-- Tombol Ganti Pass -->
                                 <button onclick="openResetModal('{{ $siswa->id }}', '{{ $siswa->name }}')" class="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-600 hover:text-white transition-all" title="Ganti Password">
                                     <i class="bi bi-key-fill"></i>
                                 </button>
                                 
-                                <!-- Tombol Hapus -->
                                 <form action="{{ route('admin.siswa.destroy', $siswa->id) }}" method="POST" onsubmit="return confirm('Hapus permanen akun ini?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all">
@@ -126,6 +136,27 @@
         </div>
     </div>
 
+    <!-- MODAL HAPUS PER ANGKATAN -->
+    <div id="modalHapusAngkatan" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
+            <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2 text-rose-600">
+                <i class="bi bi-exclamation-triangle-fill"></i> Hapus Per Angkatan
+            </h3>
+            <p class="text-sm text-slate-500 mb-4">Semua akun siswa pada tahun angkatan yang Anda masukkan akan dihapus permanen.</p>
+            <form action="{{ route('admin.siswa.destroyByAngkatan') }}" method="POST" onsubmit="return confirm('PERINGATAN: Apakah Anda yakin ingin menghapus SEMUA siswa di angkatan tersebut?')">
+                @csrf @method('DELETE')
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Tahun Angkatan</label>
+                    <input type="number" name="angkatan" placeholder="Contoh: 2022" class="w-full rounded-xl border-slate-200" required>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeModal('modalHapusAngkatan')" class="px-4 py-2 text-slate-500 font-bold text-sm">BATAL</button>
+                    <button type="submit" class="bg-rose-600 text-white px-6 py-2 rounded-xl font-bold text-sm">HAPUS DATA</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL RESET PASSWORD -->
     <div id="modalReset" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
@@ -146,13 +177,8 @@
     </div>
 
     <script>
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function openResetModal(id, name) {
             document.getElementById('resetSiswaName').innerText = "Update password untuk: " + name;

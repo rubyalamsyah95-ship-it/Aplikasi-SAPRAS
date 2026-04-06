@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
-    /**
-     * Menampilkan daftar siswa dengan fitur pencarian.
-     */
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -34,77 +31,72 @@ class UsersController extends Controller
         return view('admin.kelola-siswa', compact('siswas'));
     }
 
-    /**
-     * Memproses Import Excel.
-     */
     public function import(Request $request)
     {
-        $request->validate([
-            'file_excel' => 'required|mimes:xlsx,xls'
-        ]);
-
+        $request->validate(['file_excel' => 'required|mimes:xlsx,xls']);
         try {
             Excel::import(new UsersImport, $request->file('file_excel'));
             return back()->with('success', 'Data siswa berhasil diimport!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengimport data. Pastikan format file benar atau tidak ada email/NIS duplikat.');
+            return back()->with('error', 'Gagal mengimport data. Periksa format file.');
         }
     }
 
-    /**
-     * Menambah satu murid secara manual (Murid Pindahan/Baru).
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'nis'      => 'required|unique:users,nis',
-            'email'    => 'nullable|email|unique:users,email',
-            'kelas'    => 'required',
+            'name' => 'required|string|max:255',
+            'nis' => 'required|unique:users,nis',
+            'email' => 'nullable|email|unique:users,email',
+            'kelas' => 'required',
             'angkatan' => 'required|numeric',
         ]);
 
         User::create([
-            'name'        => $request->name,
-            'username'    => $request->nis, // Username default menggunakan NIS
-            'email'       => $request->email,
-            'password'    => Hash::make($request->nis), // Password default awal adalah NIS
-            'role'        => 'siswa',
-            'nis'         => $request->nis,
-            'kelas'       => $request->kelas,
-            'angkatan'    => $request->angkatan,
+            'name' => $request->name,
+            'username' => $request->nis,
+            'email' => $request->email,
+            'password' => Hash::make($request->nis),
+            'role' => 'siswa',
+            'nis' => $request->nis,
+            'kelas' => $request->kelas,
+            'angkatan' => $request->angkatan,
             'status_akun' => 'aktif',
         ]);
 
         return back()->with('success', 'Murid ' . $request->name . ' berhasil ditambahkan!');
     }
 
-    /**
-     * Update/Reset password siswa dengan input manual dari Admin.
-     */
     public function resetPassword(Request $request, $id)
     {
-        $request->validate([
-            'new_password' => 'required|min:4'
-        ]);
-
+        $request->validate(['new_password' => 'required|min:4']);
         $user = User::findOrFail($id);
-        $user->update([
-            'password' => Hash::make($request->new_password)
-        ]);
-
+        $user->update(['password' => Hash::make($request->new_password)]);
         return back()->with('success', 'Password akun ' . $user->name . ' berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus akun siswa.
-     */
     public function destroy($id)
     {
         $user = User::findOrFail($id);
         $namaSiswa = $user->name;
         $user->delete();
+        return back()->with('success', 'Akun ' . $namaSiswa . ' telah dihapus.');
+    }
 
-        return back()->with('success', 'Akun ' . $namaSiswa . ' telah dihapus dari sistem.');
+    // FITUR BARU: Hapus Massal Per Angkatan
+    public function destroyByAngkatan(Request $request)
+    {
+        $request->validate(['angkatan' => 'required|numeric']);
+        $angkatan = $request->angkatan;
+
+        $count = User::where('role', 'siswa')->where('angkatan', $angkatan)->count();
+
+        if ($count == 0) {
+            return back()->with('error', 'Tidak ada siswa ditemukan untuk angkatan ' . $angkatan);
+        }
+
+        User::where('role', 'siswa')->where('angkatan', $angkatan)->delete();
+
+        return back()->with('success', "Berhasil menghapus $count akun siswa angkatan $angkatan.");
     }
 }

@@ -83,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/siswa/import', [UsersController::class, 'import'])->name('admin.siswa.import'); 
         Route::post('/siswa/reset/{id}', [UsersController::class, 'resetPassword'])->name('admin.siswa.reset'); 
         Route::delete('/siswa/destroy/{id}', [UsersController::class, 'destroy'])->name('admin.siswa.destroy'); 
+        Route::delete('/admin/siswa/delete-angkatan', [UsersController::class, 'destroyByAngkatan'])->name('admin.siswa.destroyByAngkatan');
         
         // Fitur Chatbot & AI
         Route::get('/chatbot', [ChatbotController::class, 'index'])->name('admin.chatbot');
