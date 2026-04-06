@@ -1,15 +1,17 @@
 [phases.setup]
 nixPkgs = [
-    "php82", 
-    "php82Extensions.gd", 
-    "php82Extensions.pcntl", 
-    "php82Extensions.curl", 
-    "php82Extensions.zip", 
-    "php82Extensions.bcmath",
-    "php82Extensions.mbstring",
-    "php82Extensions.pdo_mysql",
+    "php84", 
+    "php84Extensions.gd", 
+    "php84Extensions.pcntl", 
+    "php84Extensions.curl", 
+    "php84Extensions.zip", 
+    "php84Extensions.bcmath",
+    "php84Extensions.mbstring",
+    "php84Extensions.pdo_mysql",
+    "php84Extensions.xml",
+    "php84Extensions.dom",
     "nodejs_20",
-    "libatomic" # WAJIB ditambahkan untuk memperbaiki error build tadi
+    "libatomic"
 ]
 
 [phases.install]
@@ -22,11 +24,10 @@ cmds = [
 cmds = [
     "npm run build", 
     "php artisan storage:link",
-    "php artisan optimize:clear" # Menghapus cache lama agar aset baru terbaca
+    "php artisan config:clear",
+    "php artisan route:clear"
 ]
 
 [phases.start]
-cmds = [
-    "php artisan migrate --force", 
-    "php artisan serve --host=0.0.0.0 --port=$PORT"
-]
+# Gunakan perintah start yang lebih standar untuk Railway agar tidak bentrok
+cmd = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
