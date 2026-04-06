@@ -16,8 +16,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-// --- RUTE EMERGENCY (Hanya untuk buat admin pertama kali di server) ---
-// Kamu bisa hapus rute ini setelah berhasil login pertama kali
+// --- RUTE EMERGENCY ADMIN ---
 Route::get('/debug-admin', function () {
     $user = \App\Models\User::updateOrCreate(
         ['username' => 'admin'],
@@ -33,11 +32,25 @@ Route::get('/debug-admin', function () {
     return "Akun Admin Berhasil Dibuat. Username: admin | Password: 123";
 });
 
+// --- RUTE EMERGENCY KATEGORI ---
+Route::get('/debug-kategori', function () {
+    $listKategori = ['Fasilitas', 'Kebersihan', 'Keamanan'];
+    
+    foreach ($listKategori as $nama) {
+        // Menggunakan updateOrCreate agar tidak duplikat jika diakses berkali-kali
+        \App\Models\Category::updateOrCreate(
+            ['nama_kategori' => $nama],
+            ['nama_kategori' => $nama]
+        );
+    }
+    
+    return "Tiga kategori (Fasilitas, Kebersihan, Keamanan) berhasil dibuat!";
+});
+
 // Semua Route di bawah ini harus LOGIN (auth)
 Route::middleware(['auth'])->group(function () {
     
     // --- LOGIKA REDIRECT DASHBOARD UTAMA ---
-    // Ini adalah rute 'jembatan' agar redirect()->intended('/dashboard') tidak error
     Route::get('/dashboard', function () {
         $user = auth()->user();
 
@@ -78,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
 
     // --- GROUPING SISWA (Hanya bisa diakses Siswa) ---
     Route::middleware(['role:siswa'])->prefix('aspirasi')->group(function () {
-        // Dashboard Siswa (Menggunakan Aspirasi Index)
+        // Dashboard Siswa
         Route::get('/', [AspirasiController::class, 'index'])->name('aspirasi.index');
         
         Route::get('/riwayat', [AspirasiController::class, 'siswaRiwayat'])->name('aspirasi.riwayat');
@@ -90,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/tolak/{id}', [AspirasiController::class, 'tolakSelesai'])->name('aspirasi.tolak');
     });
 
-    // --- PROFILE MANAGEMENT (Bisa diakses keduanya) ---
+    // --- PROFILE MANAGEMENT ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
