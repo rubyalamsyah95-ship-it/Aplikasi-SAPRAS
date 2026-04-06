@@ -21,7 +21,8 @@ class InputAspirasi extends Model
         'status',
         'foto',
         'foto_selesai', 
-        'pesan_admin', 
+        'pesan_admin',
+        'tgl_pelaporan', 
         'tgl_selesai', 
         'alasan_penolakan'
     ];
