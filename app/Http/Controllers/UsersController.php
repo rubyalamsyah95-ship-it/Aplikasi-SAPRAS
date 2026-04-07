@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Imports\UsersImport;
-use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Facades\Excel; // Pastikan baris ini ada
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
@@ -33,12 +33,18 @@ class UsersController extends Controller
 
     public function import(Request $request)
     {
-        $request->validate(['file_excel' => 'required|mimes:xlsx,xls']);
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls'
+        ]);
+
         try {
+            // Memproses import file
             Excel::import(new UsersImport, $request->file('file_excel'));
+            
             return back()->with('success', 'Data siswa berhasil diimport!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengimport data. Periksa format file.');
+            // Menampilkan pesan error asli jika perlu untuk debug
+            return back()->with('error', 'Gagal mengimport data. Periksa format file atau isi kolom.');
         }
     }
 
@@ -83,7 +89,6 @@ class UsersController extends Controller
         return back()->with('success', 'Akun ' . $namaSiswa . ' telah dihapus.');
     }
 
-    // FITUR BARU: Hapus Massal Per Angkatan
     public function destroyByAngkatan(Request $request)
     {
         $request->validate(['angkatan' => 'required|numeric']);
