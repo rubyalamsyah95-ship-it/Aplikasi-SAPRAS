@@ -31,7 +31,13 @@
         .nav-item.active { background-color: #ffffff; color: #2563eb; font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
     </style>
 
+    <!-- Scripts & Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Jalur Paksa CSS (Penting agar desain muncul di Railway) -->
+    @if(app()->isProduction() || env('RAILWAY_ENVIRONMENT'))
+        <link rel="stylesheet" href="{{ asset('build/assets/app-DNg7CCpm.css') }}">
+    @endif
     
 </head>
 <body class="antialiased {{ request()->routeIs('welcome') ? '' : 'bg-slate-50' }}" x-data="{ sidebarOpen: true }">
@@ -153,6 +159,7 @@
                                     x-transition:enter="transition ease-out duration-200"
                                     x-transition:enter-start="opacity-0 scale-95 translate-y-2"
                                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                    x-transition:even-end="opacity-100 scale-100 translate-y-0"
                                     class="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 z-50">
                                     
                                     <div class="px-5 py-4 border-b border-slate-50 mb-1">
@@ -184,5 +191,7 @@
         </div>
     @endif
 
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
