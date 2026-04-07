@@ -1,6 +1,5 @@
-/.phpunit.cache
 /node_modules
-# /public/build
+/public/build
 /public/hot
 /public/storage
 /storage/*.key
@@ -17,3 +16,17 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/.phpunit.cache
+
+# --- PENTING UNTUK RAILWAY/PRODUCTION ---
+# Abaikan semua file cache bootstrap agar tidak terjadi error "Class not found"
+/bootstrap/cache/*
+# Kecuali file .gitignore di dalamnya agar foldernya tetap ada di GitHub
+!/bootstrap/cache/.gitignore
+
+# Abaikan file logs
+/storage/logs/*
+!/storage/logs/.gitignore
+
+# Jika kamu ingin database lokal TIDAK menimpa database di cloud (Opsional)
+# /database/database.sqlite
