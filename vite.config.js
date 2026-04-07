@@ -8,4 +8,10 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    // Tambahkan konfigurasi server agar Vite menghasilkan URL HTTPS di production
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });
