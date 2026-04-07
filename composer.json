@@ -18,15 +18,14 @@
         "spatie/laravel-ignition": "^2.4"
     },
     "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
         "optimize-autoloader": true,
-        "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        },
-        "platform": {
-            "php": "8.2.0"
         }
     },
     "autoload": {
