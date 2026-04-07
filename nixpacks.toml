@@ -1,11 +1,16 @@
 [phases.setup]
-nixPkgs = ["php84", "php84Extensions.gd", "php84Extensions.pdo_sqlite", "nodejs_20", "libatomic"]
+nixPkgs = ["php84", "php84Extensions.gd", "php84Extensions.pdo_sqlite", "libatomic"]
 
 [phases.install]
+# Hanya install library PHP, tidak perlu install NodeJS di server
 cmds = ["composer install --optimize-autoloader --no-dev"]
 
 [phases.build]
+# Optimasi performa Laravel
 cmds = ["php artisan optimize"]
 
 [start]
-cmd = "touch database/database.sqlite && php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache"
+# 1. Buat database kosong jika belum ada
+# 2. Jalankan migrasi tabel
+# 3. Bersihkan cache agar CSS baru terbaca
+cmd = "touch database/database.sqlite && php artisan migrate --force && php artisan config:cache && php artisan view:cache"
